@@ -24,7 +24,7 @@ class Upload(Resource):
             return "There is a mistake in type", 400
 
         # return feed_back, 201
-        return "Your task in queue"
+        return "Your task in queue", 201
 
 
 class Download(Resource):
@@ -42,4 +42,4 @@ api.add_resource(Upload, '/upload')
 api.add_resource(Download, '/download')
 
 if __name__ == '__main__':
-    app.run(debug=1)
+    app.run(debug=True)

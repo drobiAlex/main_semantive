@@ -1,5 +1,16 @@
 import requests
 import os
+import pymongo
+
+
+# Create a client
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+
+# Create a databaseО
+mydb = myclient["web-loader"]
+
+# Create a collection
+mycol = mydb["img_and_text"]
 
 def create_dir(name):
     # Create a folder for a page if not exist
@@ -65,3 +76,49 @@ def get_html(url):
     html_url["url"] = url
 
     return html_url
+
+
+def insert_data(page_name, folder_path, mode):
+    x = mycol.find_one({'webpage': page_name})
+    if mode == "text_path":
+
+        # Insert new data if not exist
+        if x is None:
+            data = {
+                "webpage": page_name,
+                "status": "done",
+                "img_path": "",
+                "text_path": folder_path,
+            }
+
+            x = mycol.insert_one(data)
+
+            if x:
+                return "Success"
+        # Update data
+        else:
+            mycol.find_one_and_update(
+                {"webpage": page_name},
+                {"$set": {mode: folder_path}})
+            return "Success update"
+
+    elif mode == "img_path":
+        # Insert new data if not exist
+        if x is None:
+            data = {
+                "webpage": page_name,
+                "status": "done",
+                "img_path": folder_path,
+                "text_path": ""
+            }
+
+            x = mycol.insert_one(data)
+
+            if x:
+                return "Success"
+        # Update data
+        else:
+            mycol.find_one_and_update(
+                {"webpage": page_name},
+                {"$set": {mode: folder_path}})
+            return "Success update"

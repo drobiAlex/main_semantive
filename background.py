@@ -1,10 +1,8 @@
 from bs4 import BeautifulSoup
 from flask import Flask
 from celery import Celery
-from helpers import get_name, create_dir, download_image, get_html
+from helpers import get_name, create_dir, download_image, get_html, insert_data
 
-
-import pymongo
 import os
 
 
@@ -15,63 +13,54 @@ app.config['CELERY_RESULT_BACKEND'] = 'rpc://'
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
 
-# Create a client
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-
-# Create a databaseО
-mydb = myclient["web-loader"]
-
-# Create a collection
-mycol = mydb["img_and_text"]
-
 
 """ Put to the helper program"""
 
-
-def insert_data(page_name, folder_path, mode):
-    x = mycol.find_one({'webpage': page_name})
-    if mode == "text_path":
-
-        # Insert new data if not exist
-        if x is None:
-            data = {
-                "webpage": page_name,
-                "status": "done",
-                "img_path": "",
-                "text_path": folder_path,
-            }
-
-            x = mycol.insert_one(data)
-
-            if x:
-                return "Success"
-        # Update data
-        else:
-            mycol.find_one_and_update(
-                {"webpage": page_name},
-                {"$set": {mode: folder_path}})
-            return "Success update"
-
-    elif mode == "img_path":
-        # Insert new data if not exist
-        if x is None:
-            data = {
-                "webpage": page_name,
-                "status": "done",
-                "img_path": folder_path,
-                "text_path": ""
-            }
-
-            x = mycol.insert_one(data)
-
-            if x:
-                return "Success"
-        # Update data
-        else:
-            mycol.find_one_and_update(
-                {"webpage": page_name},
-                {"$set": {mode: folder_path}})
-            return "Success update"
+#
+# def insert_data(page_name, folder_path, mode):
+#     x = mycol.find_one({'webpage': page_name})
+#     if mode == "text_path":
+#
+#         # Insert new data if not exist
+#         if x is None:
+#             data = {
+#                 "webpage": page_name,
+#                 "status": "done",
+#                 "img_path": "",
+#                 "text_path": folder_path,
+#             }
+#
+#             x = mycol.insert_one(data)
+#
+#             if x:
+#                 return "Success"
+#         # Update data
+#         else:
+#             mycol.find_one_and_update(
+#                 {"webpage": page_name},
+#                 {"$set": {mode: folder_path}})
+#             return "Success update"
+#
+#     elif mode == "img_path":
+#         # Insert new data if not exist
+#         if x is None:
+#             data = {
+#                 "webpage": page_name,
+#                 "status": "done",
+#                 "img_path": folder_path,
+#                 "text_path": ""
+#             }
+#
+#             x = mycol.insert_one(data)
+#
+#             if x:
+#                 return "Success"
+#         # Update data
+#         else:
+#             mycol.find_one_and_update(
+#                 {"webpage": page_name},
+#                 {"$set": {mode: folder_path}})
+#             return "Success update"
 
 
 def parse_img(**kwargs):
