@@ -7,7 +7,7 @@ import os
 
 
 app = Flask(__name__)
-app.config['CELERY_BROKER_URL'] = 'pyamqp://'
+app.config['CELERY_BROKER_URL'] = 'amqp://admin:mypass@rabbit:5672'
 app.config['CELERY_RESULT_BACKEND'] = 'rpc://'
 
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
