@@ -1,11 +1,8 @@
-from flask import Flask
+from background import app, save_text, save_img
 from flask_restful import Api, Resource, reqparse
-from helpers import save_text, save_img
 from download import download_file
 
-app = Flask(__name__)
 api = Api(app)
-
 
 class Upload(Resource):
     def post(self):
@@ -18,15 +15,16 @@ class Upload(Resource):
         args = parser.parse_args()
 
         if args["type"] == "img":
-            feed_back = save_img(args["url"])
+            save_img.delay(args["url"])
 
         elif args["type"] == "text":
-            feed_back = save_text(args["url"])
+            save_text.delay(args["url"])
 
         else:
             return "There is a mistake in type", 400
 
-        return feed_back, 201
+        # return feed_back, 201
+        return "Your task in queue"
 
 
 class Download(Resource):
