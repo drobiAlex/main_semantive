@@ -14,9 +14,9 @@ services:
         build: .
         ports:
             - "5000:5000"
-        depends_on:
-            - rabbit
-            - db
+        expose:
+            - "5000"
+        command: flask run --host=0.0.0.0
     celera:
         build: .
         command: celery -A background.celery worker --loglevel=info
