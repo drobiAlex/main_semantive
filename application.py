@@ -37,8 +37,8 @@ class Download(Resource):
 
         args = parser.parse_args()
 
-        download_file(args["url"])
-
+        download_file.delay(args["url"])
+        return "What a minute"
 
 api.add_resource(Upload, '/upload')
 api.add_resource(Download, '/download')

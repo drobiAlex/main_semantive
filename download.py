@@ -1,9 +1,10 @@
 from helpers import mycol, get_name
 from zipfile import ZipFile
+from background import celery
 
 import os
 
-
+@celery.task
 def download_file(ulr):
     name = get_name(ulr, "")
     x = mycol.find_one({"webpage": name})
