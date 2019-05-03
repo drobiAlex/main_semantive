@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+    db:
+        image: mongo
+        ports:
+            - "27017:27017"
+    rabbit:
+        hostname: localhost
+        image: rabbitmq
+        ports:
+        - "5672:5672"
+    web:
+        build: .
+        ports:
+            - "5000:5000"
+        depends_on:
+            - rabbit
+            - db
+    celera:
+        build: .
+        command: celery -A background.celery worker --loglevel=info
+        volumes:
+            - .:/code
+        links:
+            - rabbit
+        depends_on:
+            - db
+            - rabbit
