@@ -13,56 +13,6 @@ app.config['CELERY_RESULT_BACKEND'] = 'rpc://'
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
 
-
-""" Put to the helper program"""
-
-#
-# def insert_data(page_name, folder_path, mode):
-#     x = mycol.find_one({'webpage': page_name})
-#     if mode == "text_path":
-#
-#         # Insert new data if not exist
-#         if x is None:
-#             data = {
-#                 "webpage": page_name,
-#                 "status": "done",
-#                 "img_path": "",
-#                 "text_path": folder_path,
-#             }
-#
-#             x = mycol.insert_one(data)
-#
-#             if x:
-#                 return "Success"
-#         # Update data
-#         else:
-#             mycol.find_one_and_update(
-#                 {"webpage": page_name},
-#                 {"$set": {mode: folder_path}})
-#             return "Success update"
-#
-#     elif mode == "img_path":
-#         # Insert new data if not exist
-#         if x is None:
-#             data = {
-#                 "webpage": page_name,
-#                 "status": "done",
-#                 "img_path": folder_path,
-#                 "text_path": ""
-#             }
-#
-#             x = mycol.insert_one(data)
-#
-#             if x:
-#                 return "Success"
-#         # Update data
-#         else:
-#             mycol.find_one_and_update(
-#                 {"webpage": page_name},
-#                 {"$set": {mode: folder_path}})
-#             return "Success update"
-
-
 def parse_img(**kwargs):
     soup = BeautifulSoup(kwargs['text'], features="html.parser")
 
@@ -78,7 +28,7 @@ def parse_img(**kwargs):
         f_name = get_name(kwargs['url'], "img_")
 
         if f_name in os.listdir():
-            return "Already exist"
+            return f"{f_name}Already exist"
 
         # Ensure that directory is exist
         create_dir(f_name)

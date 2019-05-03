@@ -8,14 +8,15 @@ services:
     rabbit:
         hostname: localhost
         image: rabbitmq
+        environment:
+            RABBITMQ_DEFAULT_USER: admin
+            RABBITMQ_DEFAULT_PASS: mypass
         ports:
-        - "5672:5672"
+            - "5672:5672"
     web:
         build: .
         ports:
             - "5000:5000"
-        expose:
-            - "5000"
         command: flask run --host=0.0.0.0
     celera:
         build: .

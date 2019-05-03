@@ -4,13 +4,14 @@ import pymongo
 
 
 # Create a client
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+myclient = pymongo.MongoClient('mongodb://host.docker.internal:27017', connect=False)
 
 # Create a databaseО
 mydb = myclient["web-loader"]
 
 # Create a collection
 mycol = mydb["img_and_text"]
+
 
 def create_dir(name):
     # Create a folder for a page if not exist

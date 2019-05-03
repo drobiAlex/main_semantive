@@ -35,7 +35,9 @@ class Download(Resource):
         parser.add_argument("url")
         parser.add_argument("type")
 
-        download_file(parser)
+        args = parser.parse_args()
+
+        download_file(args["url"])
 
 
 api.add_resource(Upload, '/upload')
